@@ -23,7 +23,7 @@ from operator import itemgetter
 from six import print_
 
 from snakefood.util import iter_pyfiles, setup_logging, def_ignores, is_python
-from snakefood.depends import output_depends
+from snakefood.depends import output_depends, output_depends_inverted
 from snakefood.find import find_dependencies
 from snakefood.find import ERROR_IMPORT, ERROR_SYMBOL, ERROR_UNUSED
 from snakefood.fallback.collections import defaultdict
@@ -229,7 +229,9 @@ def gendeps():
 
     # Output the dependencies.
     info("")
-    output_depends(allfiles)
+    # output_depends(allfiles)
+    output_depends_inverted(allfiles, is_json=True)
+    output_depends_inverted(allfiles, is_json=True)
 
 
 def main():

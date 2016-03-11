@@ -3,6 +3,8 @@ Routines that manipulate, read and convert lists of dependencies.
 """
 # This file is part of the Snakefood open source package.
 # See http://furius.ca/snakefood/ for licensing details.
+import json
+from pprint import pprint
 
 import sys, logging
 from operator import itemgetter
@@ -27,6 +29,30 @@ def output_depends(depdict):
         for to_root, to_ in sorted(targets):
             write(repr( ((from_root, from_), (to_root, to_)) ))
             write('\n')
+
+def invert_depends(depdict):
+    invert_dict = {}
+    for (from_root, from_), targets in sorted(depdict.iteritems(),
+                                             key=itemgetter(0)):
+        for to_root, to_ in sorted(targets):
+            if to_ is None or 'page_object' not in to_:
+                continue
+            if to_ not in invert_dict.keys():
+                invert_dict[to_] = [from_]
+            else:
+                invert_dict[to_].append(from_)
+    return invert_dict
+
+def output_depends_inverted(depdict, is_json=False):
+    """Given a dictionary of (from -> list of targets), generate an appropriate
+    output file."""
+
+    output_dict = invert_depends(depdict)
+    # Output the dependencies.
+    if is_json:
+        print json.dumps(output_dict)
+    else:
+        pprint(output_dict)
 
 def eliminate_redundant_depends(depends):
     "Remove the redundant dependencies."

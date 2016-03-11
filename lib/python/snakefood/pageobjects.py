@@ -229,7 +229,7 @@ def gendeps():
 
     # Output the dependencies.
     info("")
-    output_depends(allfiles)
+    output_depends_inverted(allfiles, is_json=True)
 
 
 def main():

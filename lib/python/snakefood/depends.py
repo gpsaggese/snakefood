@@ -24,7 +24,7 @@ def output_depends(depdict):
     output file."""
     # Output the dependencies.
     write = sys.stdout.write
-    for (from_root, from_), targets in sorted(depdict.iteritems(),
+    for (from_root, from_), targets in sorted(iter(depdict.items()),
                                              key=itemgetter(0)):
         for to_root, to_ in sorted(targets):
             write(repr( ((from_root, from_), (to_root, to_)) ))
@@ -32,12 +32,12 @@ def output_depends(depdict):
 
 def invert_depends(depdict):
     invert_dict = {}
-    for (from_root, from_), targets in sorted(depdict.iteritems(),
+    for (from_root, from_), targets in sorted(iter(depdict.items()),
                                              key=itemgetter(0)):
         for to_root, to_ in sorted(targets):
             if to_ is None or 'page_object' not in to_:
                 continue
-            if to_ not in invert_dict.keys():
+            if to_ not in list(invert_dict.keys()):
                 invert_dict[to_] = [from_]
             else:
                 invert_dict[to_].append(from_)
@@ -50,7 +50,7 @@ def output_depends_inverted(depdict, is_json=False):
     output_dict = invert_depends(depdict)
     # Output the dependencies.
     if is_json:
-        print json.dumps(output_dict)
+        print(json.dumps(output_dict))
     else:
         pprint(output_dict)
 
